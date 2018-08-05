@@ -25,8 +25,8 @@ import Generics.SOP.NP
 
 import Test.QuickCheck.Arbitrary
 
-import Quartz.Common.TypeFunctions
-import Quartz.Common.Generics
+import ProjectM36.Typed.TypeFunctions
+import ProjectM36.Typed.Generics
 import Quartz.Common.Schema
 import Quartz.Common.DB.Types
 

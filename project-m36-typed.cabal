@@ -19,8 +19,10 @@ library
     ProjectM36.Typed.Wrapped.Redundant
   build-depends:
     rio,
+    base,
     project-m36,
-    generics-sop
+    generics-sop,
+    QuickCheck
 
 
 
