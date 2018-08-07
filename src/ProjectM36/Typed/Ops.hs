@@ -94,9 +94,7 @@ createSchema sid conn sc@(QDbSchema schemaP) = do
 insertT :: forall db name a . (HasNamedDbType db name a) => Proxy name -> a -> UpdateM db a
 insertT pName a = do
   e <- liftEitherQ $ toInsertExpr [a] (showSymbol pName)
-  liftLog $ "Parsed to expr, about to executeUpdate"
   throwQ $ executeUpdate e
-  liftLog $ "Insert done!"
   return a
 
 

@@ -162,6 +162,75 @@ test-suite project-m36-typed-test
   ghc-options:
     -O2
 
+benchmark project-m36-benchmark
+  type:                exitcode-stdio-1.0
+  hs-source-dirs:      benchmark
+  main-is:             Benchmark.hs
+  ghc-options:         -Wall
+                       -Wcompat
+                       -Wincomplete-record-updates
+                       -Wincomplete-uni-patterns
+                       -Wredundant-constraints
+                       -Werror
+                       -threaded
+                       -rtsopts
+                       -with-rtsopts=-N
+  build-depends:       rio
+                     , base
+                     , project-m36-typed
+                     , tasty
+                     , tasty-quickcheck
+                     , tasty-hunit
+                     , QuickCheck
+                     , generics-sop
+                     , basic-sop
+                     , criterion
+
+
+  default-language:    Haskell2010
+  default-extensions:  AutoDeriveTypeable
+                       BangPatterns
+                       BinaryLiterals
+                       ConstraintKinds
+                       DataKinds
+                       DefaultSignatures
+                       DeriveDataTypeable
+                       DeriveFoldable
+                       DeriveFunctor
+                       DeriveGeneric
+                       DeriveTraversable
+                       DoAndIfThenElse
+                       EmptyDataDecls
+                       ExistentialQuantification
+                       FlexibleContexts
+                       FlexibleInstances
+                       FunctionalDependencies
+                       GADTs
+                       GeneralizedNewtypeDeriving
+                       InstanceSigs
+                       KindSignatures
+                       LambdaCase
+                       MonadFailDesugaring
+                       MultiParamTypeClasses
+                       MultiWayIf
+                       NamedFieldPuns
+                       NoImplicitPrelude
+                       OverloadedStrings
+                       PartialTypeSignatures
+                       PatternGuards
+                       PolyKinds
+                       RankNTypes
+                       RecordWildCards
+                       ScopedTypeVariables
+                       StandaloneDeriving
+                       TupleSections
+                       TypeApplications
+                       TypeFamilies
+                       TypeOperators
+                       TypeSynonymInstances
+                       ViewPatterns
+  ghc-options:
+    -O2
 source-repository head
   type:     git
   location: https://github.com/matchwood/project-m36-typed
