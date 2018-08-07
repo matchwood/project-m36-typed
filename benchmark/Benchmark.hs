@@ -53,12 +53,10 @@ openDB lf = do
   eRes <- connectProjectM36T lf (InProcessConnectionInfo NoPersistence emptyNotificationCallback []) dbSchema
   db <- either (throwIO ) pure eRes
   runRIO (AppEnv lf db) $ do
-    logInfo "Filling database with 100k users"
     (us :: [User]) <- liftIO $ QC.generate $ sequence $ replicate 100000 (arbitrary)
     er <- executeUpdateM $ insertBulkT (Proxy :: Proxy "Users") us
     _ <- either (throwIO ) pure er
     pure ()
-  logInfo "Database filled successfully"
   pure db
 
 
