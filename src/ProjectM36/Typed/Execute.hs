@@ -15,7 +15,7 @@ import Control.Monad.Except
 import qualified Data.List.NonEmpty as NE
 import ProjectM36.Typed.Internal
 
-import Quartz.Common.Gen
+import ProjectM36.Typed.Gen
 
 data DbConnection db = DbConnection {
   dbSession :: SessionId,
@@ -31,6 +31,7 @@ data DbErrorQ =
   | DbQErrorList (NE.NonEmpty DbErrorQ)
   deriving (Eq, Show)
 
+instance Exception DbErrorQ
 
 class ToDbErrorQ a where
   toDbErrorQ :: a -> DbErrorQ

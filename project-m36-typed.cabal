@@ -17,12 +17,29 @@ library
     ProjectM36.Typed.Ops
     ProjectM36.Typed.Wrapped
     ProjectM36.Typed.Wrapped.Redundant
+    ProjectM36.Typed.DB.Types
+    ProjectM36.Typed.Gen
+    ProjectM36.Typed.Generics
+    ProjectM36.Typed.Schema
+    ProjectM36.Typed.TypeFunctions
+    ProjectM36.Typed.Types
   build-depends:
     rio,
     base,
     project-m36,
     generics-sop,
-    QuickCheck
+    basic-sop,
+    QuickCheck,
+    binary,
+    binary-orphans,
+    type-level-sets,
+    random,
+    tf-random,
+    mtl,
+    uuid,
+    word8,
+    quickcheck-instances
+
 
 
 
@@ -33,6 +50,73 @@ library
                        -Wincomplete-uni-patterns
                        -Wredundant-constraints
                        -Werror
+  default-language:    Haskell2010
+  default-extensions:  AutoDeriveTypeable
+                       BangPatterns
+                       BinaryLiterals
+                       ConstraintKinds
+                       DataKinds
+                       DefaultSignatures
+                       DeriveDataTypeable
+                       DeriveFoldable
+                       DeriveFunctor
+                       DeriveGeneric
+                       DeriveTraversable
+                       DerivingStrategies
+                       DoAndIfThenElse
+                       EmptyDataDecls
+                       ExistentialQuantification
+                       FlexibleContexts
+                       FlexibleInstances
+                       FunctionalDependencies
+                       GADTs
+                       GeneralizedNewtypeDeriving
+                       InstanceSigs
+                       KindSignatures
+                       LambdaCase
+                       MonadFailDesugaring
+                       MultiParamTypeClasses
+                       MultiWayIf
+                       NamedFieldPuns
+                       NoImplicitPrelude
+                       OverloadedStrings
+                       PartialTypeSignatures
+                       PatternGuards
+                       PolyKinds
+                       RankNTypes
+                       RecordWildCards
+                       ScopedTypeVariables
+                       StandaloneDeriving
+                       TupleSections
+                       TypeApplications
+                       TypeFamilies
+                       TypeOperators
+                       TypeSynonymInstances
+                       ViewPatterns
+
+test-suite project-m36-typed-test
+  type:                exitcode-stdio-1.0
+  hs-source-dirs:      test
+  main-is:             Test.hs
+  ghc-options:         -Wall
+                       -Wcompat
+                       -Wincomplete-record-updates
+                       -Wincomplete-uni-patterns
+                       -Wredundant-constraints
+                       -Werror
+                       -threaded
+                       -rtsopts
+                       -with-rtsopts=-N
+  build-depends:       rio
+                     , base
+                     , project-m36-typed
+                     , tasty
+                     , tasty-quickcheck
+                     , tasty-hunit
+                     , QuickCheck
+                     , generics-sop
+                     , basic-sop
+
   default-language:    Haskell2010
   default-extensions:  AutoDeriveTypeable
                        BangPatterns
@@ -75,6 +159,9 @@ library
                        TypeOperators
                        TypeSynonymInstances
                        ViewPatterns
+  ghc-options:
+    -O2
+
 source-repository head
   type:     git
   location: https://github.com/matchwood/project-m36-typed

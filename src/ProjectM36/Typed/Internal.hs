@@ -4,7 +4,7 @@
 
 module ProjectM36.Typed.Internal (
   module ProjectM36.Typed.Internal,
-  module Quartz.Common.Schema
+  module ProjectM36.Typed.Schema
 
   ) where
 
@@ -27,8 +27,8 @@ import Test.QuickCheck.Arbitrary
 
 import ProjectM36.Typed.TypeFunctions
 import ProjectM36.Typed.Generics
-import Quartz.Common.Schema
-import Quartz.Common.DB.Types
+import ProjectM36.Typed.Schema
+import ProjectM36.Typed.DB.Types
 
 
 class (Typeable a, SOP.Generic a, SOP.HasDatatypeInfo a, Tupleable a, Arbitrary a, Eq a, Show a) => IsDbType a

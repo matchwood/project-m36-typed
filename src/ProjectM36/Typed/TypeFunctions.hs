@@ -7,16 +7,8 @@ import RIO
 import GHC.Generics
 import GHC.TypeLits
 
-import Quartz.Common.DB.Types
---import qualified GHC.Records  as R
+import ProjectM36.Typed.DB.Types
 
-{-
-class HasFieldT r field
-
-instance (R.HasField field r a, KnownSymbol field) => HasFieldT r field-}
-
-
--- @todo DbRecord in this filehere creates a dependency on Quartz  - also this should filter out the "dbRecordRecord" field, as that is not actually part of the tupleable
 
 data Field name t = Field name t
 

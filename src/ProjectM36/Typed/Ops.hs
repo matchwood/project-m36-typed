@@ -13,7 +13,7 @@ import Control.Monad.Except
 
 import ProjectM36.Typed.Internal
 import ProjectM36.Typed.Execute
-import Quartz.Common.Generics
+import ProjectM36.Typed.Generics
 
 type SchemaOpM env m = (MonadError DbErrorQ m, MonadIO m, MonadReader env m)
 

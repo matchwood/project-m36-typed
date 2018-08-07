@@ -10,6 +10,8 @@ extra-deps:
 - distributed-process-client-server-0.2.3
 - distributed-process-extras-0.3.2
 - megaparsec-6.3.0
+- type-level-sets-0.8.7.0
+- basic-sop-0.2.0.2
 
 - git: git@github.com:agentm/project-m36.git
   commit: 9d2c248bb497e6298625c0793b38ffe86351ec6d
