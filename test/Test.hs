@@ -11,7 +11,6 @@ import ProjectM36.Typed.DB.Types
 import qualified Generics.SOP as SOP
 import qualified Generics.SOP.Arbitrary as SOP
 import Test.QuickCheck as QC
-import Data.Proxy
 
 main :: IO ()
 main = do

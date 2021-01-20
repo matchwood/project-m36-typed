@@ -8,7 +8,7 @@ import Generics.SOP.NP
 
 import Generics.SOP.Dict
 
-
+import Data.Kind (Type)
 import GHC.TypeLits
 
 --import Type.Reflection
@@ -39,9 +39,9 @@ toNPDict _ = unAll_NP Dict
 
 
 class WithCDictionary c a where
-  type CDictionaryList c a :: [*]
+  type CDictionaryList c a :: [Type]
   toCDictionary :: a -> NP (Dict c) (CDictionaryList c a)
-  withCDictionary :: ((SListI (CDictionaryList c a)) => NP (Dict c) (CDictionaryList c a) -> r) -> a -> r
+  withCDictionary :: (SListI (CDictionaryList c a)) => (NP (Dict c) (CDictionaryList c a) -> r) -> a -> r
 
 
 

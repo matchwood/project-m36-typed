@@ -5,21 +5,21 @@ module ProjectM36.Typed.Gen where
 import RIO
 
 import qualified System.Random as R
-import qualified System.Random.TF as TFGen
 import Control.Monad(ap)
 import Test.QuickCheck.Gen as QC
 import Test.QuickCheck.Random as QC
+import qualified System.Random.SplitMix as SMGen (SMGen, newSMGen)
 
-gFromGen :: QC.Gen TFGen.TFGen
+gFromGen :: QC.Gen SMGen.SMGen
 gFromGen = QC.MkGen (\(QC.QCGen gen) _ -> gen)
 
 
-newtype GenT m a = GenT { unGenT :: TFGen.TFGen -> Int -> m a }
+newtype GenT m a = GenT { unGenT :: SMGen.SMGen -> Int -> m a }
 
 
 runGenT :: MonadIO m => GenT m a -> m a
 runGenT (GenT f) = do
-  g <- liftIO TFGen.newTFGen
+  g <- liftIO SMGen.newSMGen
   f g 30
 
 instance (Functor m) => Functor (GenT m) where
@@ -31,6 +31,8 @@ instance (Monad m) => Monad (GenT m) where
     let (r1, r2) = R.split r
     a <- unGenT m r1 n
     unGenT (k a) r2 n
+
+instance MonadFail m => MonadFail (GenT m) where
   fail msg = GenT (\_ _ -> fail msg)
 
 instance (Functor m, Monad m) => Applicative (GenT m) where

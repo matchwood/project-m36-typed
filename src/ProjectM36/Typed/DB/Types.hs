@@ -7,7 +7,7 @@ import qualified RIO.Time as Time
 import System.Random
 
 import Data.Binary
-import Data.Binary.Orphans()
+import Data.Binary.Instances.Time()
 
 import ProjectM36.Typed.Types
 import qualified Generics.SOP as SOP

@@ -10,7 +10,6 @@ import qualified Data.Type.Map as TM
 import Generics.SOP.NP
 --import Generics.SOP.BasicFunctors
 
-import Data.Proxy(Proxy(..))
 import qualified  RIO.Text as T
 import Generics.SOP.Constraint
 
@@ -22,6 +21,7 @@ import qualified Generics.SOP as SOP
 import Test.QuickCheck.Arbitrary
 
 import GHC.TypeLits
+import Data.Kind (Type)
 
 class (KnownSymbol (AppRecordName a ), Generic a) => AppRecordMeta a where
   type AppRecordName a :: Symbol
@@ -94,7 +94,7 @@ data AttributeExtendTupleExpr (name :: Symbol) a
 
 -- AtomExprBase
 data AttributeAtomExpr (name :: Symbol)
-data FunctionAtomExpr (name :: Symbol) (a :: [*])
+data FunctionAtomExpr (name :: Symbol) (a :: [Type])
 data RelationAtomExpr a
 
 
@@ -104,7 +104,7 @@ data RelationAtomExpr a
 
 data a :& b
 infixr 3 :&
-data (a :: *) :$ (b :: [* -> *])
+data (a :: Type) :$ (b :: [Type -> Type])
 infixr 4 :$
 
 data AddInclusionDependency (name :: Symbol) relEx1 relEx2
@@ -135,20 +135,20 @@ type family InjectConstraintsBase schema a where
   InjectConstraintsBase schema a = a
 
 
-type family DeriveConstraints schema a :: [* -> *] where
+type family DeriveConstraints schema a :: [Type -> Type] where
   DeriveConstraints schema a = Union (DeriveUniqueConstraints schema a) (DeriveForeignConstraints schema a)
 
 
-type family DeriveUniqueConstraints schema a :: [* -> *] where
+type family DeriveUniqueConstraints schema a :: [Type -> Type] where
   DeriveUniqueConstraints _ (Define _ (DbRecord a)) = '[UniqueConstraint '["dbRecordId"]]
   DeriveUniqueConstraints _ (Define _ a) = '[]
 
-type family DeriveForeignConstraints schema a :: [* -> *] where
+type family DeriveForeignConstraints schema a :: [Type -> Type] where
   DeriveForeignConstraints schema (Define n (DbRecord a)) = MakeForeignConstraints schema (ExtractFields a)
   DeriveForeignConstraints _ (Define _ a) = '[]
 
 -- iterate over fields and then find target type name
-type family MakeForeignConstraints schema (fields :: [Field Symbol *]) :: [* -> *] where
+type family MakeForeignConstraints schema (fields :: [Field Symbol Type]) :: [Type -> Type] where
   MakeForeignConstraints _ '[] = '[]
   -- ignore own recordId
   MakeForeignConstraints schema (('Field "dbRecordId" _) ': xs) = MakeForeignConstraints schema xs
@@ -172,33 +172,33 @@ type family IsWrappedByDbRecord db a :: Bool where
 type ExtractUniqueRelVarBaseTypes a = Nub (ExtractRelVarBaseTypes a)
 
 
-type family ExtractRelVarBaseTypes a = (res :: [*]) where
+type family ExtractRelVarBaseTypes a = (res :: [Type]) where
   ExtractRelVarBaseTypes (a :& b) = Union (ExtractRelVarBaseTypes a) (ExtractRelVarBaseTypes b)
   ExtractRelVarBaseTypes (a :$ _) = ExtractRelVarBaseTypes a
   ExtractRelVarBaseTypes (Define _ (DbRecord a)) = '[a]
   ExtractRelVarBaseTypes (Define _ a) = '[a]
 
 
-type family ExtractRelVars a = (res :: [*]) where
+type family ExtractRelVars a = (res :: [Type]) where
   ExtractRelVars a = TMValues (ToRelVarMap a)
 
 type family ExtractRelVarNames a = (res :: [Symbol]) where
   ExtractRelVarNames a = TMKeys (ToRelVarMap a)
 
-data RelVarMappingDbRecord (name :: Symbol) (a :: *)
-data RelVarMappingRaw (name :: Symbol) (a :: *)
+data RelVarMappingDbRecord (name :: Symbol) (a :: Type)
+data RelVarMappingRaw (name :: Symbol) (a :: Type)
 
 type family ExtractRelVarMappings a where
   ExtractRelVarMappings a = ToRelVarMappings (ToRelVarMap a)
 
-type family ToRelVarMappings (xs :: [TM.Mapping Symbol *]) :: [*] where
+type family ToRelVarMappings (xs :: [TM.Mapping Symbol Type]) :: [Type] where
   ToRelVarMappings '[] = '[]
   ToRelVarMappings ((s 'TM.:-> (DbRecord a)) ':xs) = (RelVarMappingDbRecord s a) ': (ToRelVarMappings xs)
   ToRelVarMappings ((s 'TM.:-> a) ':xs) = (RelVarMappingRaw s a) ': (ToRelVarMappings xs)
 
 
 
-type family ToRelVarMap a = (res :: [TM.Mapping Symbol *])  where
+type family ToRelVarMap a = (res :: [TM.Mapping Symbol Type])  where
   ToRelVarMap (a :& b) = Union (ToRelVarMap a) (ToRelVarMap b)
   ToRelVarMap (a :$ _) = ToRelVarMap a
   ToRelVarMap (Define s a) = '[s 'TM.:-> a]
@@ -216,25 +216,25 @@ type family LookupRelVarType schema a where
   LookupRelVarType schema a = FromMaybe (LookupTMValue (ToRelVarMap schema) a)
 
 
-type family TMKeys (a :: [TM.Mapping Symbol *]) :: [Symbol] where
+type family TMKeys (a :: [TM.Mapping Symbol Type]) :: [Symbol] where
   TMKeys '[] = '[]
   TMKeys ((k 'TM.:-> _) ': xs) = k ': (TMKeys xs)
 
-type family TMValues (a :: [TM.Mapping Symbol *]) :: [*] where
+type family TMValues (a :: [TM.Mapping Symbol Type]) :: [Type] where
   TMValues '[] = '[]
   TMValues ((_ 'TM.:-> v) ': xs) = v ': (TMValues xs)
 
-type family LookupTMKey (m :: [TM.Mapping Symbol *]) (a :: *) :: (Maybe Symbol) where
+type family LookupTMKey (m :: [TM.Mapping Symbol Type]) (a :: Type) :: (Maybe Symbol) where
   LookupTMKey ((k 'TM.:-> v) ': xs) v = 'Just k
   LookupTMKey ((_ 'TM.:-> x) ': xs) v = LookupTMKey xs v
   LookupTMKey _ _ = 'Nothing
 
-type family LookupTMValue (m :: [TM.Mapping Symbol *]) (a :: Symbol) :: (Maybe *) where
+type family LookupTMValue (m :: [TM.Mapping Symbol Type]) (a :: Symbol) :: (Maybe Type) where
   LookupTMValue ((k 'TM.:-> v) ': xs) k = 'Just v
   LookupTMValue ((_ 'TM.:-> x) ': xs) k = LookupTMValue xs k
   LookupTMValue _ _ = 'Nothing
 
-type family LookupTMKeys (m :: [TM.Mapping Symbol *]) (a :: *) :: ([Symbol]) where
+type family LookupTMKeys (m :: [TM.Mapping Symbol Type]) (a :: Type) :: ([Symbol]) where
   LookupTMKeys ((k 'TM.:-> v) ': xs) v = Union '[k] (LookupTMKeys xs v)
   LookupTMKeys ((_ 'TM.:-> x) ': xs) v = LookupTMKeys xs v
   LookupTMKeys _ _ = '[]
