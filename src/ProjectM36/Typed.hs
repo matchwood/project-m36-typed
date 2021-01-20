@@ -39,7 +39,7 @@ module ProjectM36.Typed (
     C.RelationTuple(..),
     C.Attribute(..),
     C.AtomType(..),
-    C.DatabaseContextExpr(..),
+    C.DatabaseContextExpr,
     C.atomForAttributeName,
 
 

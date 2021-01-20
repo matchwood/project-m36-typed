@@ -6,6 +6,7 @@ import RIO
 
 import GHC.Generics
 import GHC.TypeLits
+import Data.Kind (Type)
 
 import ProjectM36.Typed.DB.Types
 
@@ -14,26 +15,26 @@ data Field name t = Field name t
 
 
 
-type family Nub (xs :: [*]) :: [*] where
+type family Nub (xs :: [Type]) :: [Type] where
   Nub '[] = '[]
   Nub (x ': xs) = If (Elem x xs) (Nub xs) (x ': Nub xs)
 
-type family ExtractFieldNames (r :: *) :: [Symbol] where
+type family ExtractFieldNames (r :: Type) :: [Symbol] where
 
   ExtractFieldNames r = DoExtractFieldNames (ExtractFields r)
 
-type family DoExtractFieldNames (r :: [Field Symbol *]) :: [Symbol] where
+type family DoExtractFieldNames (r :: [Field Symbol Type]) :: [Symbol] where
   DoExtractFieldNames '[] = '[]
   DoExtractFieldNames (('Field n _) ':xs) = Union '[n] (DoExtractFieldNames xs)
 
 
 
-type family ExtractFields (r :: *):: [Field Symbol *] where
+type family ExtractFields (r :: Type):: [Field Symbol Type] where
   ExtractFields (DbRecord a) = Union (ExtractFieldsG (Rep a)) (ExtractFieldsG (Rep (DbRecord a)))
   ExtractFields a = ExtractFieldsG (Rep a)
 
 
-type family ExtractFieldsG (r :: * -> *) :: [Field Symbol *] where
+type family ExtractFieldsG (r :: Type -> Type) :: [Field Symbol Type] where
   ExtractFieldsG (l :*: r)
     = Union (ExtractFieldsG l) (ExtractFieldsG r)
   ExtractFieldsG (S1 ('MetaSel ('Just name) _ _ _) (Rec0 t))
@@ -145,7 +146,7 @@ type family Concat (xs :: [[k]]) where
 
 
 
-type family ExpandApply (fs :: [* -> *]) a = (res :: [*]) where
+type family ExpandApply (fs :: [Type -> Type]) a = (res :: [Type]) where
   ExpandApply ('[]) _ = '[]
   ExpandApply ((b ': rs)) a = b a ': ExpandApply rs a
 
