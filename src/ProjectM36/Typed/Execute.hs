@@ -160,7 +160,7 @@ runIOInQueryM act = QueryM $ liftIO act
 
 executeQueryM :: (HasLogFunc (env db), HasDbConnection env db, MonadReader (env db) m, MonadIO m) => QueryM db a -> m (Either DbErrorQ a)
 executeQueryM (QueryM a) = do
-  DbConnection{..} <- view dbConnectionL
+  DbConnection{} <- view dbConnectionL
   liftRIO $ runExceptT a
 
 instance CanQueryDb (QueryM db) where

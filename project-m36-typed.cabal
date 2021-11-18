@@ -24,6 +24,7 @@ library
     ProjectM36.Typed.TypeFunctions
     ProjectM36.Typed.Types
   build-depends:
+    splitmix,
     rio,
     base,
     project-m36,
@@ -31,7 +32,7 @@ library
     basic-sop,
     QuickCheck,
     binary,
-    binary-orphans,
+    binary-instances,
     type-level-sets,
     random,
     tf-random,
@@ -51,8 +52,7 @@ library
                        -Wredundant-constraints
                        -Werror
   default-language:    Haskell2010
-  default-extensions:  AutoDeriveTypeable
-                       BangPatterns
+  default-extensions:  BangPatterns
                        BinaryLiterals
                        ConstraintKinds
                        DataKinds
@@ -74,7 +74,6 @@ library
                        InstanceSigs
                        KindSignatures
                        LambdaCase
-                       MonadFailDesugaring
                        MultiParamTypeClasses
                        MultiWayIf
                        NamedFieldPuns
@@ -90,6 +89,7 @@ library
                        TupleSections
                        TypeApplications
                        TypeFamilies
+                       TypeFamilyDependencies
                        TypeOperators
                        TypeSynonymInstances
                        ViewPatterns
@@ -118,8 +118,7 @@ test-suite project-m36-typed-test
                      , basic-sop
 
   default-language:    Haskell2010
-  default-extensions:  AutoDeriveTypeable
-                       BangPatterns
+  default-extensions:  BangPatterns
                        BinaryLiterals
                        ConstraintKinds
                        DataKinds
@@ -140,7 +139,6 @@ test-suite project-m36-typed-test
                        InstanceSigs
                        KindSignatures
                        LambdaCase
-                       MonadFailDesugaring
                        MultiParamTypeClasses
                        MultiWayIf
                        NamedFieldPuns
@@ -188,8 +186,7 @@ benchmark project-m36-benchmark
 
 
   default-language:    Haskell2010
-  default-extensions:  AutoDeriveTypeable
-                       BangPatterns
+  default-extensions:  BangPatterns
                        BinaryLiterals
                        ConstraintKinds
                        DataKinds
@@ -210,7 +207,6 @@ benchmark project-m36-benchmark
                        InstanceSigs
                        KindSignatures
                        LambdaCase
-                       MonadFailDesugaring
                        MultiParamTypeClasses
                        MultiWayIf
                        NamedFieldPuns

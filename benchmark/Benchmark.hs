@@ -4,7 +4,6 @@
 module Main where
 
 import RIO
-import Data.Proxy (Proxy(..))
 import Criterion.Main
 import qualified Generics.SOP as SOP
 import qualified Generics.SOP.Arbitrary as SOP
